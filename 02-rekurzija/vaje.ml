@@ -17,7 +17,18 @@
  rekurzivna.
 [*----------------------------------------------------------------------------*)
 
-let reverse _ = ()
+let rec reverse sez = 
+  match sez with
+  | [] -> []
+  | x :: xs -> (reverse xs) @ [x]
+  
+let reverse2 sez =
+  let rec reverse_aux sez acc =
+    match sez with
+    | [] -> acc
+    | x::xs -> reverse_aux xs (x::acc)
+  in 
+  reverse_aux sez []
 
 (*----------------------------------------------------------------------------*
  ## Funkcija `repeat`
@@ -28,7 +39,18 @@ let reverse _ = ()
   vrednosti `n` funkcija vrne prazen seznam.
 [*----------------------------------------------------------------------------*)
 
-let rec repeat _ _ = ()
+let rec repeat x n = 
+  if n <= 0 then []
+  else  x :: repeat x (n-1)
+
+let repeat2 x n =
+  let rec repeat_aux x n acc =
+    if n >= 0 then []
+    else repeat_aux x (n-1) (x::acc)
+  in
+  repeat_aux x n []
+
+  
 
 let primer_repeat_1 = repeat "A" 5
 (* val primer_repeat_1 : string list = ["A"; "A"; "A"; "A"; "A"] *)
@@ -47,8 +69,12 @@ let primer_repeat_2 = repeat "A" (-2)
  funkcije `List.init`.
 [*----------------------------------------------------------------------------*)
 
-let range _ = ()
+let rec range' a = 
+  if a <= 0 then []
+  else a :: range' (a-1)
 
+let range a =
+  reverse2 (range' a)
 let primer_range = range 10
 (* val primer_range : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10] *)
 
@@ -62,7 +88,10 @@ let primer_range = range 10
  ...`. Pri tem ne smete uporabiti vgrajene funkcije `List.map`.
 [*----------------------------------------------------------------------------*)
 
-let rec map _ _ = ()
+let rec map f list = 
+  match list with
+  |[] -> []
+  |x :: xs -> (f x) :: map f xs
 
 let primer_map_1 =
   let plus_two = (+) 2 in
@@ -74,7 +103,13 @@ let primer_map_1 =
  `map`.
 [*----------------------------------------------------------------------------*)
 
-let map_tlrec _ _ = ()
+let map_tlrec f list = 
+  let rec map_tlrec_aux f list acc =
+    match list with
+    |[] -> []
+    |x :: xs -> (map_tlrec_aux f xs acc) @ (f x)
+  in
+  map_tlrec_aux f list []
 
 let primer_map_2 =
   let plus_two = (+) 2 in
@@ -101,7 +136,15 @@ let primer_map_2 =
  Pri tem ne smete uporabiti vgrajene funkcije `List.mapi`.
 [*----------------------------------------------------------------------------*)
 
-let mapi _ _ = ()
+let mapi f l =
+  let rec mapi_aux i l= 
+    match l with
+    |[]->[]
+    |x::xs -> (f i x) :: mapi_aux (i+1) xs
+  in
+  mapi_aux 0 l
+
+
 
 let primer_mapi = mapi (+) [0; 0; 0; 2; 2; 2]
 (* val primer_mapi : int list = [0; 1; 2; 5; 6; 7] *)
