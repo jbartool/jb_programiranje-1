@@ -104,12 +104,12 @@ let primer_map_1 =
 [*----------------------------------------------------------------------------*)
 
 let map_tlrec f list = 
-  let rec map_tlrec_aux f list acc =
+  let rec map_tlrec_aux list acc =
     match list with
-    |[] -> []
-    |x :: xs -> (map_tlrec_aux f xs acc) @ (f x)
+    |[] -> reverse2 acc
+    |x :: xs -> map_tlrec_aux xs (f x :: acc)
   in
-  map_tlrec_aux f list []
+  map_tlrec_aux list []
 
 let primer_map_2 =
   let plus_two = (+) 2 in
