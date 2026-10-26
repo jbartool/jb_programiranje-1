@@ -73,7 +73,11 @@ let rec skalarni_produkt a b =
     `f (... (f (f a0 x1) x2) ...) xn`.
   [*----------------------------------------------------------------------------*)
 
-let rec zlozi_levo _ _ _ = failwith "TODO"
+let rec zlozi_levo f a0 sez = 
+  match sez with
+  |[] -> a0
+  |x :: xs -> zlozi_levo f (f a0 x) xs
+
 
 (*----------------------------------------------------------------------------*
     Napišite funkcijo `zlozi_desno : ('a -> 'b -> 'b) -> 'b -> 'a list -> 'b`,
@@ -85,7 +89,11 @@ let rec zlozi_levo _ _ _ = failwith "TODO"
     `f x1 (f x2 (... (f xn b0) ...))`.
   [*----------------------------------------------------------------------------*)
 
-let rec zlozi_desno _ _ _ = failwith "TODO"
+let rec zlozi_desno f b0 sez = 
+  match sez with
+  |[] -> b0
+  |x :: xs -> f x (zlozi_desno f b0 xs)
+
 
 (*----------------------------------------------------------------------------*
     Napišite funkcijo
@@ -101,7 +109,14 @@ let rec zlozi_desno _ _ _ = failwith "TODO"
     `f a1 x2 = (a2, y2)`...
   [*----------------------------------------------------------------------------*)
 
-let rec zlozi_levo_pretvori _ _ _ = failwith "TODO"
+let rec zlozi_levo_pretvori f a0 =
+  function
+  | [] -> (a0, [])
+  | x :: xs -> 
+    let (a1, g) = f a0 x in
+    let (an, r) = zlozi_levo_pretvori f a1 xs in 
+    (an, g :: r)
+
 
 (*----------------------------------------------------------------------------*
     Napišite funkcijo
@@ -115,7 +130,16 @@ let rec zlozi_levo_pretvori _ _ _ = failwith "TODO"
     `Neujemajoca_dimenzija`.
   [*----------------------------------------------------------------------------*)
 
-let rec zlozi_levo2 _ _ _ _ = failwith "TODO"
+let rec zlozi_levo2 f a0 sez1 sez2 = 
+  if List.length sez1 <> List.length sez2 then raise Neujemajoca_dimenzija
+  else 
+    match sez1, sez2 with
+    | [], [] -> a0
+    | x :: xs, y :: ys -> zlozi_levo2 f (f a0 x y) xs ys
+    | _ -> raise Neujemajoca_dimenzija
+
+    
+
 
 (*----------------------------------------------------------------------------*
    ## Uporaba zlaganja
